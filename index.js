@@ -87,32 +87,31 @@ app.put('/users/:Username', (req,res) => {
       },
     },
     {new: true},
-    (err, updatedUser) => {
-      if(err) {
-        console.error(err);
-        res.status(500).send('error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    }
-  );
+  )
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((e) => {
+      res.status(500).send('error: '+ e);
+      console.error(e);
+    });
 });
 
+
 //Add a movie to a user's list of favorites
-app.post('/users/:Username/movies/:MovieId', (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-     $push: { FavoriteMovies: req.params.MovieId }
-   },
-   { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
-});
+app.post("/users/:Username/movies/:MovieId", async (req, res) => {
+     try {
+       let updatedUser = await Users.findOneAndUpdate(
+         { Username: req.params.Username },
+         { $push: { FavoriteMovies: req.params.MovieId } },
+         { new: true }
+       );
+       res.json(updatedUser);
+     } catch (e) {
+       console.error(e);
+       res.status(500).send("Error: " + e);
+     }
+   });
 
 //Deleted a user by username
 app.delete('/users/:Username', (req, res) => {
@@ -136,14 +135,14 @@ app.delete('/users/:Username', (req, res) => {
      $pull: { FavoriteMovies: req.params.MovieId }
    },
    { new: true }, 
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+   )
+   .then((updatedUser) => {
+     res.json(updatedUser);
+   })
+   .catch((e) => {
+     res.status(500).send('error: '+ e);
+     console.error(e);
+   });
 });
 
 //get all movies check

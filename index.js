@@ -17,10 +17,9 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), { 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
-
+let auth = require("./auth.js")(app);
+const passport = require("passport");
+require("./passport");
 
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use(express.static("public"));
@@ -119,7 +118,7 @@ app.post("/users/:Username/movies/:MovieId",passport.authenticate('jwt', {sessio
    });
 
 //Deleted a user by username
-app.delete('/users/:Username',passport.authenticate('jwt', {session: false}), (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', {session: false}),  (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
@@ -209,6 +208,6 @@ app.use((err, req, res, next) => {
   res.status(500).send("Error? why? :(");
 });
 
-app.listen(8079, () => {
+app.listen(8015, () => {
   console.log("App listening on port 8005");
 }); 

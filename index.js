@@ -9,13 +9,27 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
+const port = process.env.PORT || 8015;
 
 mongoose.connect('mongodb://localhost:27017/myFlixappDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), { flags: "a",});
-
+const { check, validationResult } = require('express-validator');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const cors = require('cors');
+let allowedOrigins = ['http://localhost:8015', 'http://testsite.com'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      let mesage = 'the Cors policy for this application doesn\'t allow access from origin' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 let auth = require("./auth.js")(app);
 const passport = require("passport");
@@ -29,7 +43,19 @@ app.get("/", (req, res) => {
   res.send("my Movie Api!");
 });
 //Add a user
-app.post('/users', (req, res) => {
+app.post('/users',
+ [
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric chearacters - not allowedOrigins.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+  let errors = validationResult(req);
+
+  if (!errors.isEmpty()){
+    return res.status(422).json({errors: errors.array()});
+  }
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
@@ -45,7 +71,7 @@ app.post('/users', (req, res) => {
         .catch((error) => {
           console.error(error);
           res.status(500).send('Error: ' + error);
-        })
+        });
       }
     })
     .catch((error) => {
@@ -208,6 +234,6 @@ app.use((err, req, res, next) => {
   res.status(500).send("Error? why? :(");
 });
 
-app.listen(8015, () => {
-  console.log("App listening on port 8005");
-}); 
+app.listen(port, 'O.O.O.O', () => {
+  Console.log('Listening on port ' + port);
+});

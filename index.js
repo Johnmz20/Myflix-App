@@ -236,7 +236,7 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send("Error? why? :(");
 });
-const port = process.env.PORT || 8070;
+const port = process.env.PORT || 5000;
 app.listen(port, "O.O.O.O", () => {
     Console.log("Listening on port " + port);
 });

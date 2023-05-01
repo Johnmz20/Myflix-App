@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
-const port = process.env.PORT || 8015;
+const port = process.env.PORT || 8060;
 
 //mongoose.connect('mongodb://localhost:27017/myFlixappDB', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -229,7 +229,7 @@ app.get('/documentation', (req, res) => {
   res.sendFile('public/Documentation.html', {root: __dirname});
 });
 
-//error
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Error? why? :(");

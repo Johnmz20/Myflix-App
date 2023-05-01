@@ -11,7 +11,8 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const port = process.env.PORT || 8015;
 
-mongoose.connect('mongodb://localhost:27017/myFlixappDB', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://localhost:27017/myFlixappDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), { flags: "a",});
 const { check, validationResult } = require('express-validator');

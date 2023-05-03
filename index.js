@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/users', UsersRoutes);
-app.use('/movies', UsersRoutes);
+app.use('/movies', MoviesRoutes);
 
 //check
 app.get("/documentation", (req, res) => {

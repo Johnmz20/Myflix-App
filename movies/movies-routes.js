@@ -6,7 +6,7 @@ const Models = require("../models.js");
 const Movies = Models.Movie;
 
 //get all movies check
-MoviesRoutes.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
+MoviesRoutes.get("/", (req, res) => {
     Movies.find()
         .then((movies) => {
             res.status(201).json(movies);
@@ -18,7 +18,7 @@ MoviesRoutes.get("/", passport.authenticate("jwt", { session: false }), (req, re
 });
 
 //Get a movie by title check
-MoviesRoutes.get("/:Title", passport.authenticate("jwt", { session: false }), (req, res) => {
+MoviesRoutes.get("/:Title", (req, res) => {
     Movies.findOne({ Title: req.params.Title })
         .then((movie) => {
             res.json(movie);
@@ -29,7 +29,7 @@ MoviesRoutes.get("/:Title", passport.authenticate("jwt", { session: false }), (r
         });
 });
 //Get a Movie by Genre check
-MoviesRoutes.get("/genre/:genreName", passport.authenticate("jwt", { session: false }), (req, res) => {
+MoviesRoutes.get("/genre/:genreName", (req, res) => {
     Movies.findOne({ "Genre.Name": req.params.genreName })
         .then((movie) => {
             res.json(movie.Genre);
@@ -41,7 +41,7 @@ MoviesRoutes.get("/genre/:genreName", passport.authenticate("jwt", { session: fa
 });
 
 //Get a Movie by director check
-MoviesRoutes.get("/directors/:directorName", passport.authenticate("jwt", { session: false }), (req, res) => {
+MoviesRoutes.get("/directors/:directorName", (req, res) => {
     Movies.findOne({ "Director.Name": req.params.directorName })
         .then((movie) => {
             res.json(movie.Director);
